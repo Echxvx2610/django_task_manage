@@ -1,0 +1,27 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Tasks</h1>
+    
+    <ul class="list-group">
+        {% for task in tasks %}
+            <li class="list-group-item mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        {# Nota: esto es un comentario con jinja2 #}
+                        <h2 class="h5">{% if task.done == False %} ⏲ {% else %} ✅ {% endif %}
+                            Actividad: {{ task.title }}</h2>
+                        <p class="mb-1">Descripción: {{ task.description }}</p>
+                        <p class="mb-1"><strong>Proyecto:</strong> {{ task.project.name }}</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-success">✅Done</button>
+                        <!-- <button class="btn btn-outline-info">Info Button</button> -->
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
