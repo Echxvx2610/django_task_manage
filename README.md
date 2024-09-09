@@ -7,7 +7,7 @@
 2. Activacion del entorno
     - En windows:
       ```bash
-        .\venv\Scripts\activate
+        venv\Scripts\activate
     - En macOS/Linux:
       ```bash
         source venv/bin/activate
