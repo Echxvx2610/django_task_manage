@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
-
-
 # Create your views here.
 def index(request):
     'Funcion para el index o primera vista de localhost'
@@ -31,20 +29,166 @@ def about(request):
         'username':  username  })
 
 
-def projects(request):
-    'Funcion para mostrar la vista Projects'
-    projects = Project.objects.all()
-    #lista de objetos para imprimir en el template
-    return render(request, 'projects.html',{
-        'projects' : projects
+def projects_view(request):
+    search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', 'all')
+    
+    # Filtrar proyectos según la búsqueda
+    projects = Project.objects.filter(name__icontains=search_query)
+    
+    # Filtrar según el estado de las tareas
+    if status_filter == 'with_completed_tasks':
+        projects = projects.filter(task__done=True).distinct()
+    elif status_filter == 'with_pending_tasks':
+        projects = projects.filter(task__done=False).distinct()
+
+    return render(request, 'projects.html', {
+        'projects': projects,
+        'active_filter': status_filter
     })
 
-def tasks(request):
-    'Funcion para mostrar la vista Tasks'
-    tasks = Task.objects.all()
-    return render(request, 'tasks.html',{
-        'tasks' : tasks
+def project_detail(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    tasks = Task.objects.filter(project=project)
+
+    if request.method == 'POST':
+        task_id = request.POST.get('task_id')
+        action = request.POST.get('action')
+        task = get_object_or_404(Task, id=task_id)
+
+        if action == 'toggle_done':
+            task.done = not task.done
+            task.save()
+
+        return redirect('project_detail', project_id=project.id)
+
+    return render(request, 'project_detail.html', {
+        'project': project,
+        'tasks': tasks
     })
+
+def create_project(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        Project.objects.create(name=name)
+        return redirect('projects')
+    return render(request, 'create_project.html')
+
+def tasks_view(request):
+    search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', 'all')
+    
+    # Filtrar tareas según la búsqueda
+    tasks = Task.objects.filter(title__icontains=search_query)
+    
+    # Filtrar según el estado
+    if status_filter == 'active':
+        tasks = tasks.filter(done=False)
+    elif status_filter == 'completed':
+        tasks = tasks.filter(done=True)
+
+    return render(request, 'tasks.html', {
+        'tasks': tasks,
+        'active_filter': status_filter
+    })
+
+def create_task(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        # Crear una nueva tarea asociada al proyecto
+        Task.objects.create(title=title, description=description, project=project)
+        
+        # Redirigir a la vista de detalles del proyecto
+        return redirect('project_detail', project_id=project.id)
+    
+    return render(request, 'create_task.html', {'project': project})
+
+
+def create_task_general(request):
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        project_id = request.POST.get('project')
+        project = get_object_or_404(Project, id=project_id)
+
+        # Crear una nueva tarea
+        Task.objects.create(title=title, description=description, project=project)
+
+        # Redirigir a la lista de tareas
+        return redirect('tasks')
+
+    # Obtener todos los proyectos para mostrarlos en un selector
+    projects = Project.objects.all()
+    return render(request, 'create_task.html', {'projects': projects})
+
+
+# Vista para eliminar una tarea
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.delete()
+    return redirect('tasks')
+
+# Vista para marcar una tarea como "hecho"
+def mark_task_done(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.done = True
+    task.save()
+    return redirect('tasks')
+
+# Vista para actualizar una tarea
+# def update_task(request, task_id):
+#     task = get_object_or_404(Task, id=task_id)
+#     projects = Project.objects.all()  # Obtener todos los proyectos
+
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         description = request.POST.get('description')
+#         done = 'done' in request.POST
+#         project_id = request.POST.get('project')  # Obtener el ID del proyecto
+
+#         # Actualizar la tarea
+#         task.title = title
+#         task.description = description
+#         task.done = done
+#         if project_id:
+#             task.project = Project.objects.get(id=project_id)
+#         task.save()
+
+#         return redirect('tasks')
+
+#     return render(request, 'update_task.html', {
+#         'task': task,
+#         'projects': projects
+#     })
+
+def update_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    project = task.project
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        done = request.POST.get('done') == 'on'
+
+        task.title = title
+        task.description = description
+        task.done = done
+        task.save()
+
+        # Redirigir según el parámetro redirect_url o a 'tasks' por defecto
+        redirect_url = request.POST.get('redirect_url', 'tasks')
+        return redirect(redirect_url)
+
+    # Obtener la URL de redirección desde el parámetro GET si está disponible
+    redirect_url = request.GET.get('redirect_url', 'tasks')
+
+    return render(request, 'update_task.html', {'task': task, 'redirect_url': redirect_url})
 
 def login_view(request):
     if request.method == 'POST':

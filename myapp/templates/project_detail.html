@@ -1,0 +1,54 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Card de detalles del proyecto -->
+    <div class="card shadow-sm p-3 mb-5 rounded">
+        <div class="card-body">
+            <!-- Título del proyecto -->
+            <h2 class="card-title">{{ project.name }}</h2>
+            
+            <!-- Botón para crear nueva tarea -->
+            <a href="{% url 'create_task' project.id %}" class="btn btn-outline-success mb-3">New Task</a>
+            
+            <!-- Lista de tareas del proyecto -->
+            <h3 class="mt-4">Tasks</h3>
+            {% if tasks %}
+                <ul class="list-group">
+                    {% for task in tasks %}
+                        <!-- Mostrar cada tarea -->
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">{{ task.title }}</h5>
+                                    <p class="mb-1">{{ task.description }}</p>
+                                    <span class="badge {{ task.done|yesno:'bg-success,bg-warning' }}">
+                                        {{ task.done|yesno:'Completed,Pending' }}
+                                    </span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <!-- Formulario para marcar como hecho/pending -->
+                                    <form method="post" action="{% url 'project_detail' project.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                                        <input type="hidden" name="action" value="toggle_done">
+                                        <button type="submit" class="btn btn-success">
+                                            {% if task.done %}Mark as Pending{% else %}Mark as Done{% endif %}
+                                        </button>
+                                    </form>
+                                    <!-- Enlace para actualizar tarea -->
+                                    <a href="{% url 'update_task' task.id %}?redirect_url={% url 'project_detail' project.id %}" class="btn btn-warning">🔃 Update</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No tasks found for this project.</p>
+            {% endif %}
+            
+            <!-- Botón de regreso -->
+            <a href="{% url 'projects' %}" class="btn btn-secondary mt-3">Back to Projects</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

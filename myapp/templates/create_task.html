@@ -1,0 +1,36 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-3 mb-5 rounded">
+        <div class="card-body">
+            <h2 class="card-title">Add New Task</h2>
+            <!-- Formulario para agregar nueva tarea -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                </div>
+                {% if not project %}
+                    <div class="mb-3">
+                        <label for="project" class="form-label">Project</label>
+                        <select class="form-select" id="project" name="project" required>
+                            {% for project in projects %}
+                                <option value="{{ project.id }}">{{ project.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% else %}
+                    <input type="hidden" name="project" value="{{ project.id }}">
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Create Task</button>
+                <a href="{% url 'tasks' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

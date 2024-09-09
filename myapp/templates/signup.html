@@ -8,19 +8,20 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #343a40; /* Fondo oscuro */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            color: #f8f9fa; /* Texto claro */
         }
 
         .signup-container {
-            background-color: white;
+            background-color: #495057; /* Fondo del contenedor de registro */
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             width: 300px;
             text-align: center;
         }
@@ -42,15 +43,18 @@
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #6c757d; /* Borde oscuro */
             border-radius: 4px;
             font-size: 16px;
+            background-color: black; /* Fondo de los campos de entrada */
+            color: #f8f9fa; /* Texto en los campos de entrada */
+            width:280px;
         }
 
         .signup-container button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #007bff; /* Fondo del botón */
             color: white;
             border: none;
             border-radius: 4px;
@@ -60,15 +64,16 @@
         }
 
         .signup-container button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Color del botón al pasar el cursor */
         }
 
         .login-link {
             display: block;
             margin-top: 20px;
-            color: #007bff;
+            color: white;
             text-decoration: none;
             font-size: 14px;
+            
         }
 
         .login-link:hover {
@@ -89,7 +94,7 @@
             <button type="submit">Registrar</button>
         </form>
         <!-- Enlace de inicio de sesión -->
-        <a href="{% url 'login' %}" class="login-link">Ya tengo una cuenta. Iniciar sesión</a>
+        <a href="{% url 'login' %}" class="login-link">I have a account, Log in</a>
     </div>
 </body>
 </html>

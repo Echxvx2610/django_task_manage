@@ -1,0 +1,29 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-3 mb-5 rounded">
+        <div class="card-body">
+            <h2 class="card-title">Update Task</h2>
+            <!-- Formulario para actualizar tarea -->
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="redirect_url" value="{{ redirect_url }}">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required>{{ task.description }}</textarea>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="done" name="done" {% if task.done %}checked{% endif %}>
+                    <label class="form-check-label" for="done">Done</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Task</button>
+                <a href="{{ redirect_url }}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
