@@ -39,3 +39,6 @@ Visita el proyecto: https://echxvx2610.pythonanywhere.com/index/
 ### Tasks.html
 ![image](https://github.com/user-attachments/assets/d783e6ba-5fb8-4eea-9c90-b4614a8f0831)
 
+### Project/Taks
+![image](https://github.com/user-attachments/assets/55763006-4d79-45ac-a912-0fc779cfd110)
+
