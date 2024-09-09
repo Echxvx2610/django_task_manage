@@ -16,3 +16,15 @@
     pip install -r requirements.txt
 
 Visita el proyecto: https://echxvx2610.pythonanywhere.com/index/
+
+## Pendientes
+
+- [ ] Aplicar estilos a template
+   - [ ] log in
+   - [ ] sign in
+
+- [ ] Correcion de gramatica
+   - [ ] log in
+   - [ ] sign in
+     
+- [ ] Control de Usuarios
