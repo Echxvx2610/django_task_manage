@@ -6,9 +6,13 @@
 
 2. Activacion del entorno
     - En windows:
+      ```bash
         .\venv\Scripts\activate
-    - En macOS/Linux
+    - En macOS/Linux:
+      ```bash
         source venv/bin/activate
 
 3. Instalacion de las dependencias:
     pip install -r requirements.txt
+
+Visita el proyecto:
