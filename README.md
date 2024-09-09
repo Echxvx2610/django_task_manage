@@ -15,4 +15,4 @@
 3. Instalacion de las dependencias:
     pip install -r requirements.txt
 
-Visita el proyecto:
+Visita el proyecto:https://echxvx2610.pythonanywhere.com/index/
